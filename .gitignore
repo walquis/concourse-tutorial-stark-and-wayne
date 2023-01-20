@@ -4,4 +4,5 @@ stub.yml
 credentials.yml
 tmp
 vendor/*
+venv/*
 site

@@ -38,7 +38,7 @@ The `task_hello_world.yml` task file looks like:
 platform: linux
 
 image_resource:
-  type: docker-image
+  type: registry-image
   source: {repository: busybox}
 
 run:
@@ -76,7 +76,7 @@ Try changing the `image_resource:` and the `run:` and run a different task:
 platform: linux
 
 image_resource:
-  type: docker-image
+  type: registry-image
   source: {repository: ubuntu}
 
 run:
