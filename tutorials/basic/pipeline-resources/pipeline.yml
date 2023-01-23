@@ -5,6 +5,9 @@ resources:
     source:
       uri: https://github.com/starkandwayne/concourse-tutorial.git
       branch: develop
+      git_config:
+      - name: safe.directory
+        value: "*"
 
 jobs:
   - name: job-hello-world
