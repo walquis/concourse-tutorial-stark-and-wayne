@@ -1,0 +1,49 @@
+---
+resources:
+  - name: resource-tutorial
+    type: git
+    source:
+      uri: https://github.com/walquis/concourse-tutorial-stark-and-wayne.git
+      branch: master
+      git_config:
+      - name: safe.directory
+        value: "*"
+  - name: resource-gist
+    type: git
+    source:
+      uri: git@gist.github.com:86ab6c7f23299af094302d778820704e.git
+      branch: main
+      private_key: |
+        -----BEGIN OPENSSH PRIVATE KEY-----
+        b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
+        ...
+        OAAAAAtzc2gtZWQyNTUxOQAAACBBcFWqjAaqbN0LPDVphzk1u6vpc1UY830+7AOXovbuZw
+        -----END OPENSSH PRIVATE KEY-----
+      git_config:
+      - name: safe.directory
+        value: "*"
+
+jobs:
+  - name: job-bump-date
+    serial: true
+    plan:
+      - get: resource-tutorial
+      - get: resource-gist
+      - task: bump-timestamp-file
+        config:
+          platform: linux
+          image_resource:
+            type: registry-image
+            source: {repository: starkandwayne/concourse}
+
+          inputs:
+            - name: resource-tutorial
+            - name: resource-gist
+          outputs:
+            - name: updated-gist
+          run:
+            path: resource-tutorial/tutorials/basic/publishing-outputs/bump-timestamp-file.sh
+
+      - put: resource-gist
+        params:
+          repository: updated-gist
